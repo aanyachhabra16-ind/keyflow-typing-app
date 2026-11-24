@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KEYFLOW — Type faster. Find your flow.</title>
+  <meta name="description" content="A premium, minimalist typing speed test designed for focus, rhythm, and flow. Warm ivory typography, soft lavender accents, and real-time accuracy analytics.">
+
+  <!-- Favicon SVG -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%238B5CF6'/%3E%3Cpath d='M8 12h16M8 16h10M8 20h13' stroke='%23ffffff' stroke-width='2.5' stroke-linecap='round'/%3E%3Ccircle cx='23' cy='20' r='2' fill='%23ffffff'/%3E%3C/svg%3E">
+
+  <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Ambient background glow for organic luxury feel -->
+  <div class="ambient-glow" aria-hidden="true"></div>
+
+  <!-- Confetti Canvas for New Personal Bests -->
+  <canvas id="confettiCanvas" aria-hidden="true"></canvas>
+
+  <!-- App Wrapper -->
+  <div class="app-container">
+
+    <!-- Header Section -->
+    <header class="header">
+      <div class="brand-section">
+        <div class="logo-symbol" aria-hidden="true">
+          <!-- Flow Wave Keymark Icon -->
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"></path>
+            <path d="M12 12v9"></path>
+            <path d="m8 17 4 4 4-4"></path>
+          </svg>
+        </div>
+        <div class="brand-meta">
+          <h1 class="brand-name">KEY<span>FLOW</span></h1>
+          <p class="brand-tagline">Type faster. Find your flow.</p>
+        </div>
+      </div>
+
+      <!-- Header Action Controls -->
+      <div class="header-actions">
+        <!-- Personal Best Pill for Current Mode -->
+        <div class="pb-badge" id="headerPbBadge" title="Personal Best for current mode">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+          </svg>
+          <span>Best:</span>
+          <span class="pb-val" id="headerPbValue">--</span>
+        </div>
+
+        <!-- Sound FX Toggle -->
+        <button class="action-btn" id="soundToggleBtn" title="Toggle tactile sound effects" aria-label="Toggle typing sound">
+          <span class="sound-dot" id="soundDot"></span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+          </svg>
+        </button>
+
+        <!-- Stats & History Modal Trigger -->
+        <button class="action-btn" id="statsModalBtn" title="View lifetime statistics and test history" aria-label="View statistics">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 3v18h18"></path>
+            <path d="M18 17V9"></path>
+            <path d="M13 17V5"></path>
+            <path d="M8 17v-3"></path>
+          </svg>
+        </button>
+
+        <!-- Light / Dark Mode Toggle -->
+        <button class="action-btn" id="themeToggleBtn" title="Toggle light / dark theme" aria-label="Toggle theme">
+          <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Content Flow -->
+    <main>
+      <!-- Mode & Passage Configuration Bar -->
+      <section class="config-bar" aria-label="Test settings">
+        <!-- Test Duration Selector (15s, 30s, 60s) -->
+        <div class="pill-group" role="radiogroup" aria-label="Test Duration">
+          <span class="pill-label">Time</span>
+          <button class="mode-btn" data-mode="15" role="radio" aria-checked="false">15s</button>
+          <button class="mode-btn active" data-mode="30" role="radio" aria-checked="true">30s</button>
+          <button class="mode-btn" data-mode="60" role="radio" aria-checked="false">60s</button>
+        </div>
+
+        <!-- Passage Category Filter -->
+        <div class="category-select-wrapper">
+          <span class="pill-label">Theme</span>
+          <select class="category-select" id="categorySelect" aria-label="Select passage category">
+            <option value="all">All Topics</option>
+            <option value="flow">Flow & Deep Focus</option>
+            <option value="wisdom">Wisdom & Mastery</option>
+            <option value="design">Design & Architecture</option>
+            <option value="philosophy">Mind & Philosophy</option>
+            <option value="tech">Technology & Code</option>
+            <option value="science">Brain & Science</option>
+            <option value="short">Short & Swift</option>
+          </select>
+        </div>
+
+        <!-- Secondary Actions -->
+        <div class="config-right-actions">
+          <button class="refresh-passage-btn" id="refreshPassageBtn" title="Load a different passage">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+            </svg>
+            <span>New Passage</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- Live Telemetry HUD Bar -->
+      <section class="hud-bar" aria-label="Live typing stats">
+        <!-- Time Remaining Card -->
+        <div class="hud-card" id="timeHudCard">
+          <div class="hud-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            <span>Remaining</span>
+          </div>
+          <div class="hud-value-row">
+            <span class="hud-value" id="liveTime">30</span>
+            <span class="hud-unit">s</span>
+          </div>
+        </div>
+
+        <!-- Live Net WPM Card -->
+        <div class="hud-card">
+          <div class="hud-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+            </svg>
+            <span>Live Speed</span>
+          </div>
+          <div class="hud-value-row">
+            <span class="hud-value" id="liveWpm">0</span>
+            <span class="hud-unit">WPM</span>
+          </div>
+        </div>
+
+        <!-- Live Accuracy Card -->
+        <div class="hud-card">
+          <div class="hud-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <circle cx="12" cy="12" r="6"></circle>
+              <circle cx="12" cy="12" r="2"></circle>
+            </svg>
+            <span>Accuracy</span>
+          </div>
+          <div class="hud-value-row">
+            <span class="hud-value" id="liveAccuracy">100</span>
+            <span class="hud-unit">%</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Interactive Typing Stage -->
+      <section class="typing-stage" id="typingStage" tabindex="0" role="region" aria-label="Typing test area">
+        <!-- Progress Indicator Track -->
+        <div class="progress-track">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <!-- Passage Header Metadata -->
+        <div class="passage-header-meta">
+          <div class="passage-title-chip">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+            </svg>
+            <span id="passageTitle">The Flow State</span>
+          </div>
+          <span id="passageCategory" style="font-weight: 700; letter-spacing: 0.08em; font-size: 0.75rem;">FLOW</span>
+        </div>
+
+        <!-- Words Viewport -->
+        <div class="words-container-wrapper" id="wordsWrapper">
+          <div class="words-container" id="wordsContainer">
+            <!-- Dynamically populated word and character spans -->
+          </div>
+          <!-- Smooth gliding caret cursor -->
+          <div class="caret-cursor blinking" id="caret" aria-hidden="true"></div>
+        </div>
+
+        <!-- Hidden input element for native key capture across all devices -->
+        <input type="text" class="hidden-typing-input" id="hiddenInput" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" aria-label="Typing input">
+
+        <!-- Unfocused State Overlay -->
+        <div class="focus-overlay" id="focusOverlay">
+          <div class="focus-pill">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path>
+            </svg>
+            <span>Click anywhere or press any key to focus</span>
+          </div>
+        </div>
+
+        <!-- Stage Footer: Quick restart button & Keyboard Shortcuts -->
+        <div class="stage-footer">
+          <div class="restart-action-wrapper">
+            <button class="restart-btn" id="restartBtn" title="Restart test (Tab + Enter)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                <path d="M3 3v5h5"></path>
+              </svg>
+              <span>Restart Test</span>
+            </button>
+            <span class="hotkey-hint">
+              <kbd class="key-kbd">Tab</kbd> + <kbd class="key-kbd">Enter</kbd>
+            </span>
+          </div>
+
+          <div class="hotkey-hint">
+            <span>Quick reset: <kbd class="key-kbd">Esc</kbd></span>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- App Footer -->
+    <footer class="app-footer">
+      <div class="footer-quote">
+        “Optimal experience is something that we make happen.” — Mihaly Csikszentmihalyi
+      </div>
+      <div class="footer-links">
+        <span>KEYFLOW v1.0</span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- ========================================================================
+       RESULTS MODAL SCREEN
+       ======================================================================== -->
+  <div class="modal-overlay" id="resultsModal" role="dialog" aria-modal="true" aria-labelledby="resultsTitle">
+    <div class="modal-card">
+      <button class="close-modal-btn" id="closeResultsBtn" aria-label="Close results">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+
+      <!-- Personal Best Celebration Banner -->
+      <div class="pb-celebration-banner" id="pbBanner">
+        <!-- Injected via JS when new record achieved -->
+      </div>
+
+      <!-- Hero WPM Section -->
+      <div class="results-hero">
+        <div class="results-wpm-block">
+          <span class="results-wpm-label" id="resultsTitle">Net Typing Speed</span>
+          <div class="results-wpm-val" id="resultWpm">0</div>
+        </div>
+        <div class="results-tier-badge">
+          <div class="tier-pill" id="tierPill">✨ Flow Master</div>
+          <div class="tier-message" id="tierMessage">Effortless rhythm and control.</div>
+        </div>
+      </div>
+
+      <!-- Secondary Metrics Grid -->
+      <div class="results-grid">
+        <div class="result-item">
+          <span class="result-label">Accuracy</span>
+          <span class="result-number" id="resultAccuracy">100%</span>
+          <span class="result-detail">Keystroke accuracy</span>
+        </div>
+        <div class="result-item">
+          <span class="result-label">Raw Speed</span>
+          <span class="result-number" id="resultRawWpm">0</span>
+          <span class="result-detail">Gross WPM</span>
+        </div>
+        <div class="result-item">
+          <span class="result-label">Errors</span>
+          <span class="result-number" id="resultErrors">0</span>
+          <span class="result-detail" id="resultCharsDetail">0 / 0</span>
+        </div>
+        <div class="result-item">
+          <span class="result-label">Time</span>
+          <span class="result-number" id="resultTime">30s</span>
+          <span class="result-detail">Duration</span>
+        </div>
+      </div>
+
+      <!-- Speed Curve SVG Chart -->
+      <div class="chart-container">
+        <div class="chart-header">
+          <span class="chart-title">Velocity Timeline</span>
+          <span class="chart-peak" id="chartPeak">Peak: 0 WPM</span>
+        </div>
+        <svg class="wpm-chart-svg" id="chartSvg" viewBox="0 0 600 90" preserveAspectRatio="none">
+          <!-- Dynamic spline path rendered here -->
+        </svg>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="results-actions">
+        <div style="display: flex; gap: 0.65rem;">
+          <button class="btn-primary" id="tryAgainBtn">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+              <path d="M3 3v5h5"></path>
+            </svg>
+            <span>Try Again</span>
+          </button>
+          <button class="btn-secondary" id="nextPassageBtn">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+            <span>Next Passage</span>
+          </button>
+        </div>
+        <button class="btn-secondary" id="shareResultBtn" title="Copy formatted result card">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          </svg>
+          <span>Share</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       STATS & LIFETIME HISTORY MODAL
+       ======================================================================== -->
+  <div class="modal-overlay" id="statsModal" role="dialog" aria-modal="true" aria-labelledby="statsTitle">
+    <div class="modal-card">
+      <button class="close-modal-btn" id="closeStatsBtn" aria-label="Close statistics">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+
+      <div class="stats-header-bar">
+        <h2 class="stats-modal-title" id="statsTitle">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="var(--accent-lavender)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 3v18h18"></path>
+            <path d="M18 17V9"></path>
+            <path d="M13 17V5"></path>
+            <path d="M8 17v-3"></path>
+          </svg>
+          Personal Statistics
+        </h2>
+        <button class="btn-secondary" id="clearStatsBtn" style="font-size: 0.75rem; padding: 0.35rem 0.75rem;">Clear Data</button>
+      </div>
+
+      <!-- Personal Bests Grid -->
+      <div class="stats-pb-grid">
+        <div class="stats-pb-card">
+          <div class="stats-pb-mode">15 Seconds</div>
+          <div class="stats-pb-wpm" id="pb15Wpm">--</div>
+          <div class="stats-pb-acc" id="pb15Acc">No score yet</div>
+        </div>
+        <div class="stats-pb-card">
+          <div class="stats-pb-mode">30 Seconds</div>
+          <div class="stats-pb-wpm" id="pb30Wpm">--</div>
+          <div class="stats-pb-acc" id="pb30Acc">No score yet</div>
+        </div>
+        <div class="stats-pb-card">
+          <div class="stats-pb-mode">60 Seconds</div>
+          <div class="stats-pb-wpm" id="pb60Wpm">--</div>
+          <div class="stats-pb-acc" id="pb60Acc">No score yet</div>
+        </div>
+      </div>
+
+      <!-- Lifetime Aggregates -->
+      <div class="results-grid" style="margin-bottom: 1.5rem;">
+        <div class="result-item">
+          <span class="result-label">Tests Completed</span>
+          <span class="result-number" id="lifetimeTotalTests">0</span>
+        </div>
+        <div class="result-item">
+          <span class="result-label">Average Speed</span>
+          <span class="result-number" id="lifetimeAvgWpm">--</span>
+        </div>
+        <div class="result-item">
+          <span class="result-label">Top Speed</span>
+          <span class="result-number" id="lifetimeTopWpm">--</span>
+        </div>
+        <div class="result-item">
+          <span class="result-label">Storage</span>
+          <span class="result-number" style="font-size: 1rem; margin-top: 0.3rem;">Local</span>
+        </div>
+      </div>
+
+      <!-- Recent History List -->
+      <div class="history-list-title">Recent Tests</div>
+      <div class="history-list" id="historyList">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Pill -->
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="20 6 9 17 4 12"></polyline>
+    </svg>
+    <span id="toastText">Action completed</span>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/passages.js"></script>
+  <script src="js/sound.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
